@@ -11,6 +11,12 @@ import resultReducer from './store/reducers/result';
 
 import Navigator from './navigation/Navigator';
 
+import * as firebase from 'firebase';
+import { config } from './firebase';
+
+//firebase.initializeApp(config);
+//firebase.auth().signInAnonymously();
+
 const rootReducer = combineReducers({
   cards: cardsReducer,
   money: moneyReducer,
