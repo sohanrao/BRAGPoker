@@ -71,6 +71,7 @@ const validateSixCardHand = (dealer, player) => {
             }
         }
     } else if (isSixCardFlush(suits)) {
+        console.log('isSixCardFlush');
         handValue = hands.FLUSH;
     } else if (isSixCardTrips(values)) {
         handValue = hands.TRIPS;
@@ -122,12 +123,12 @@ const determineBonus = cards => {
 
     if (handValue) {
         threeCardBonus = Object.keys(hands).find(key => hands[key] === handValue);
-        threeCardBonus = threeCardBonus.replace('_', ' ');
+        threeCardBonus = threeCardBonus.replace('_', '');
     }
 
     if (sixCardValue) {
         sixCardBonus = Object.keys(hands).find(key => hands[key] === sixCardValue);
-        sixCardBonus = sixCardBonus.replace('_', ' ');
+        sixCardBonus = sixCardBonus.replace('_', '');
     }
 
     return {

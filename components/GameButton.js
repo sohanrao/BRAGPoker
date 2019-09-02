@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import PropTypes from "prop-types";
 
-const gameButton = props => {
+const GameButton = props => {
     const { children, onPressed, disabled } = props;
     return (
         <TouchableOpacity onPress={onPressed} style={{...props.style}} disabled={disabled}>
@@ -15,10 +16,10 @@ const gameButton = props => {
 const styles = StyleSheet.create({
     button: {
         backgroundColor: '#FC4445',
-        paddingHorizontal: 30,
+        paddingHorizontal: 15,
         paddingVertical: 12,
         borderColor: 'white',
-        borderWidth: 5,
+        borderWidth: 4,
         borderRadius: 13,
         elevation: 5
     },
@@ -32,4 +33,11 @@ const styles = StyleSheet.create({
     },
 });
 
-export default gameButton;
+GameButton.proptypes = {
+    children: PropTypes.node,
+    onPressed: PropTypes.func,
+    disabled: PropTypes.bool,
+    style: PropTypes.object
+}
+
+export default GameButton;

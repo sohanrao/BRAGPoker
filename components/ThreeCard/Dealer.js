@@ -5,12 +5,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import CardsLayout from './CardsLayout';
 import { getDeck } from './CardShuffler';
 import { determineWinner, determineBonus } from './Result';
-import { setResults } from '../../store/actions/money';
+import { setResults, foldPlayer } from '../../store/actions/money';
 import { setCards } from '../../store/actions/cards';
 
-const dealer = props => {
+const Dealer = () => {
     const dealing = useSelector(state => state.cards.dealing);
     const playing = useSelector(state => state.cards.playing);
+    const folded = useSelector(state => state.cards.folded);
     const showCards = useSelector(state => state.cards.showCards);
     const cards = useSelector(state => state.cards.cards);
 
@@ -36,13 +37,14 @@ const dealer = props => {
     }, [dealing, showCards]);
 
     useEffect(() => {
-        if (playing) {
+        if (playing || folded) {
             const winner = determineWinner(cards);
             const {threeCardBonus, sixCardBonus} = determineBonus(cards);
+            const action = playing ? setResults(winner, threeCardBonus, sixCardBonus) : foldPlayer(sixCardBonus);
 
-            dispatch(setResults(winner, threeCardBonus, sixCardBonus));
+            dispatch(action);
         }
-    }, [playing]);
+    }, [playing, folded]);
 
     if (!showCards) {
         return <View></View>
@@ -50,7 +52,7 @@ const dealer = props => {
 
     return (
         <View style={styles.main}>
-            <CardsLayout cards={cards.dealerCards} reveal={playing} dealer />
+            <CardsLayout cards={cards.dealerCards} reveal={playing || folded} dealer />
             <CardsLayout cards={cards.playerCards} />
         </View>
     )
@@ -62,4 +64,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default dealer;
+export default Dealer;

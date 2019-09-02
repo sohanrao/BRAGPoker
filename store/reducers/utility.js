@@ -35,7 +35,7 @@ export const calculateBonuses = (pairplus, sixcard, state) => {
         const hands = payouts[item];
         return (value && bet > 0) ? bet * hands[value] : 0;
     }
-    const pairplusW = getAmount('pairplus', pairplus);
+    const pairplusW = pairplus ? getAmount('pairplus', pairplus) : 0;
     const sixcardW = getAmount('sixcardbonus', sixcard);
 
     return {

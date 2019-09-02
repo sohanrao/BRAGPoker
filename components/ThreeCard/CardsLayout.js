@@ -1,9 +1,10 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import PropTypes from "prop-types";
 
 import Card from '../Card';
 
-const cardsLayout = props => {
+const CardsLayout = props => {
     return (
         <View style={styles.container}>
             {props.cards.map((card, index) => 
@@ -27,4 +28,10 @@ const styles = StyleSheet.create({
     }
 });
 
-export default cardsLayout;
+CardsLayout.proptypes = {
+    cards: PropTypes.array,
+    reveal: PropTypes.bool,
+    dealer: PropTypes.bool
+}
+
+export default CardsLayout;

@@ -5,6 +5,8 @@ export const REMOVE_LAST_BET = "REMOVE_LAST_BET";
 export const PLACE_PLAY_BET = "PLACE_PLAY_BET";
 export const RESET_ALL_BETS = "RESET_ALL_BETS";
 export const SET_RESULTS = "SET_RESULTS";
+export const FOLD_PLAYER = "FOLD_PLAYER";
+export const DO_REBET = "DO_REBET";
 
 export const setAvailableAmount = amt => {
     return {
@@ -52,5 +54,18 @@ export const setResults = (winner, pairplus, sixcard) => {
         winner,
         pairplus,
         sixcard
+    }
+}
+
+export const foldPlayer = (sixcard) => {
+    return {
+        type: FOLD_PLAYER,
+        sixcard
+    }
+}
+
+export const doRebet = () => {
+    return {
+        type: DO_REBET
     }
 }

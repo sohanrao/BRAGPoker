@@ -8,7 +8,7 @@ const startupScreen = props => {
     useEffect(() => {
         const tryLogin = async () => {
             let score = await AsyncStorage.getItem('score');
-            if (!score) {
+            if (!score || isNaN(score)) {
                 score = 1000;
             }
             props.navigation.navigate('Games');

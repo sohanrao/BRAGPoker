@@ -3,6 +3,7 @@ import { SET_BETS_ACTIVE, SET_DEAL_START, SET_PLAY_START, RESET_DEAL, SET_CARDS 
 const initialState = {
     dealing: false,
     playing: false,
+    folded: false,
     betsActive: false,
     showCards: false,
     cards: {
@@ -27,7 +28,8 @@ const cardsReducer = (state = initialState, action) => {
         case SET_PLAY_START:
             return {
                 ...state,
-                playing: true
+                playing: action.play,
+                folded: !action.play
             }
         case RESET_DEAL:
             return initialState;

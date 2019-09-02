@@ -45,12 +45,3 @@ export default function App() {
     <Provider store={store}><Navigator /></Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    padding: 30,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});

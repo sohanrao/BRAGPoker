@@ -1,6 +1,8 @@
 import React from 'react';
-import { Modal, StyleSheet, View, Text, Button, SectionList, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, View, Text, SectionList } from 'react-native';
+import PropTypes from "prop-types";
+
+import Modal from '../PayoutsModal';
 
 const PAYOUT_DATA = [
     { title: 'Ultimate Texas Hold\'em Paytables', data: [
@@ -22,7 +24,7 @@ const PAYOUT_DATA = [
     ]}
 ];
 
-const payouts = props => {
+const Payouts = props => {
     const renderRow = (item, index) => {
         const textClasses = [styles.text];
         const textEl = (content) => <Text style={textClasses}>{content}</Text>;
@@ -38,47 +40,22 @@ const payouts = props => {
         );
     }
     return (
-        <Modal 
-          style={styles.modal}
-          animationType = {"slide"}
-          visible={props.visible}
-          transparent={true}>
-            <View style={styles.modal}>
-                <View style={styles.container}>
-                    <SectionList 
-                        renderItem={({item, index}) => (
-                            renderRow(item, index)
-                        )}
-                        renderSectionHeader={({section: {title}}) => (
-                            <Text style={[styles.text, styles.titleText]}>{title}</Text>
-                        )}
-                        sections={PAYOUT_DATA}
-                        keyExtractor={(item, index) => item.item1 + index}
-                    />
-                    <TouchableOpacity onPress={props.onClose}>
-                        <View style={{alignSelf: "center"}}>
-                            <Ionicons name="md-checkmark-circle" size={48} color="green" />
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            </View>
+        <Modal visible={props.visible} onClose={props.onClose}>
+            <SectionList 
+                renderItem={({item, index}) => (
+                    renderRow(item, index)
+                )}
+                renderSectionHeader={({section: {title}}) => (
+                    <Text style={[styles.text, styles.titleText]}>{title}</Text>
+                )}
+                sections={PAYOUT_DATA}
+                keyExtractor={(item, index) => item.item1 + index}
+            />
         </Modal>
     )
 }
 
 const styles = StyleSheet.create({
-    modal: {
-        flex: 1
-    },
-    container: {
-        flex: 1,
-        padding: 20,
-        paddingHorizontal: 40,
-        margin: 20,
-        backgroundColor: "white",
-        borderRadius: 10,
-        opacity: 0.95
-    },
     text: {
         flex: 1,
         fontSize: 16,
@@ -92,4 +69,13 @@ const styles = StyleSheet.create({
     }
 });
 
-export default payouts;
+Payouts.proptypes = {
+    visible: PropTypes.bool.isRequired,
+    onClose: PropTypes.func
+}
+
+Payouts.defaultProps = {
+    visible: false
+}
+
+export default Payouts;

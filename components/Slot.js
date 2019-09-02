@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import PropTypes from "prop-types";
 
 import Chip from './Chip';
 import { selectSlot, removeLastBet } from '../store/actions/money';
 
-const slot = props => {
+const Slot = props => {
     const { name, bets, label } = props;
     const last = bets.length - 1;
 
@@ -52,7 +53,7 @@ const slot = props => {
                 {bets.length > 0 ?
                     <View>
                         { showResult() ? 
-                            <Chip style={{position: 'absolute', top: -25, left: -45}} 
+                            <Chip position={{position: 'absolute', top: -25, left: -45}} 
                                 value={winnings[name]} /> : null
                         }
                         <Chip value={bets[last]} pressed={removeBetHandler} />
@@ -89,4 +90,16 @@ const styles = StyleSheet.create({
     }
 });
 
-export default slot;
+Slot.propTypes = {
+    name: PropTypes.string.isRequired,
+    bets: PropTypes.array.isRequired,
+    label: PropTypes.string.isRequired
+};
+
+Slot.defaultProps = {
+    name: '',
+    bets: [],
+    label: ''
+}
+
+export default Slot;

@@ -4,9 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import Chip from '../Chip';
 import Slot from '../Slot';
-import { selectSlot, placeBet, removeLastBet, placePlayBet } from '../../store/actions/money';
+import { selectSlot, placeBet, placePlayBet } from '../../store/actions/money';
 
-const bets = props => {
+const Bets = () => {
     const activeSlot = useSelector(state => state.money.activeSlot);
     const anteBets = useSelector(state => state.money.anteBets);
     const playBets = useSelector(state => state.money.playBets);
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default bets;
+export default Bets;

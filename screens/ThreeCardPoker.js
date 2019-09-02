@@ -12,7 +12,7 @@ import Money from '../components/Money';
 import HeaderButton from '../components/HeaderButton';
 
 import { setBetsActive, setDealStart, setPlayStart, resetDeal } from '../store/actions/cards';
-import { resetBets } from '../store/actions/money';
+import { resetBets, doRebet } from '../store/actions/money';
 
 import { Utils } from '../components/constants';
 
@@ -20,9 +20,11 @@ const threeCardPoker = props => {
     const [showPayouts, setShowPayouts] = useState(false);
     const anteBets = useSelector(state => state.money.anteBets);
     const totalMoney = useSelector(state => state.money.totalMoney);
+    const reset = useSelector(state => state.money.reset);
 
     const dealing = useSelector(state => state.cards.dealing);
     const playing = useSelector(state => state.cards.playing);
+    const folded = useSelector(state => state.cards.folded);
     const betsActive = useSelector(state => state.cards.betsActive);
 
     const dispatch = useDispatch();
@@ -42,7 +44,12 @@ const threeCardPoker = props => {
     }, []);
 
     useEffect(() => {
-        console.log(anteBets.toString());
+        props.navigation.setParams({
+            money: totalMoney
+        })
+    }, [totalMoney]);
+
+    useEffect(() => {
         dispatch(setBetsActive(anteBets.length > 0));
     }, [anteBets]);
 
@@ -50,20 +57,24 @@ const threeCardPoker = props => {
         dispatch(setDealStart());
     }
 
-    const playHandler = () => {
+    const playHandler = (play) => {
         if (!dealing) {
             return;
         }
-        dispatch(setPlayStart());
+        dispatch(setPlayStart(play));
     }
 
-    const dealCompleteHandler = (person, threeCardBonus, sixCardBonus) => {
+    const dealCompleteHandler = () => {
         setDealing(false);
     }
 
     const doReset = () => {
         dispatch(resetDeal());
         dispatch(resetBets());
+    }
+
+    const rebetHandler = () => {
+        dispatch(doRebet());
     }
 
     return (
@@ -75,10 +86,11 @@ const threeCardPoker = props => {
             </View>
             <View style={styles.footer}>
                 <GameButton onPressed={dealHandler} disabled={!betsActive}>Deal</GameButton>
-                <Money amt={totalMoney} />
-                <GameButton onPressed={playHandler} disabled={!betsActive}>Play</GameButton>
+                <GameButton onPressed={() => playHandler(true)} disabled={!betsActive}>Play</GameButton>
+                <GameButton onPressed={() => playHandler(false)} disabled={!betsActive}>Fold</GameButton>
+                <GameButton onPressed={rebetHandler} disabled={(!betsActive && reset) ? false : true}>Rebet</GameButton>
             </View>
-            {playing ? (
+            {(playing || folded) ? (
                 <TouchableWithoutFeedback onPress={doReset}>
                     <View style={styles.overlay}></View>
                 </TouchableWithoutFeedback>
@@ -89,12 +101,14 @@ const threeCardPoker = props => {
 
 threeCardPoker.navigationOptions = navigationData => {
     const navData = navigationData;
+    const { getParam } = navData.navigation;
     return {
+        headerTitle: (<View style={{flex: 1}}><Money amt={getParam('money')} /></View>),
         headerRight: <HeaderButtons HeaderButtonComponent={HeaderButton}>
             <Item 
                 title={Utils.text.btnPayouts}
                 iconName={Utils.btnPayoutsIcon}
-                onPress={() => { navData.navigation.getParam('toggle')();}} />
+                onPress={() => { getParam('toggle')();}} />
         </HeaderButtons>
     }
 }

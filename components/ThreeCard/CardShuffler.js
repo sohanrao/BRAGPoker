@@ -16,8 +16,8 @@ const cards = [
 ];
 
 const getDeck = () => {
-    //test deck
-    //const testCards = ['3-heart','4-heart','6-heart','14-heart','13-spade', '11-heart'];
+    //uncomment below for test deal
+    //const testCards = ['8-spade','10-heart','11-spade','5-spade','6-spade', '11-spade'];
     //return addCardsToDeck(testCards);
 
     //prepare deck
@@ -43,6 +43,7 @@ const getDeck = () => {
     return deck;
 }
 
+/* Called when test deal is activated above */
 const addCardsToDeck = testCards => {
     const deck = [];
     for(let i=0; i < testCards.length; i++) {

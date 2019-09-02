@@ -1,4 +1,4 @@
-import { PLACE_BET, SELECT_SLOT, REMOVE_LAST_BET, PLACE_PLAY_BET, RESET_ALL_BETS, SET_RESULTS, SET_AVAILABLE_AMOUNT } from "../actions/money";
+import { PLACE_BET, SELECT_SLOT, REMOVE_LAST_BET, PLACE_PLAY_BET, RESET_ALL_BETS, SET_RESULTS, SET_AVAILABLE_AMOUNT, DO_REBET, FOLD_PLAYER } from "../actions/money";
 import { calculateBonuses, getSum, getSums } from './utility';
 
 const initialState = {
@@ -15,6 +15,12 @@ const initialState = {
         play: 0,
         pairplus: 0,
         sixcardbonus: 0
+    },
+    reset: false,
+    lastBets: {
+        ab: [],
+        ppb: [],
+        scbb: []
     }
 };
 
@@ -83,14 +89,45 @@ const moneyReducer = (state = initialState, action) => {
                 },
                 totalMoney: state.totalMoney + totalBets + totalBonusBets + totalW
             }
+        case FOLD_PLAYER:
+            const foldSixCardW = calculateBonuses('', action.sixcard, state).sixcardW;
+            const foldSixCardBonusBets = foldSixCardW ? getSum(state.sixcardbonusBets) : 0;
+            return {
+                ...state,
+                winnings: {
+                    ...state.winnings,
+                    sixcardbonus: foldSixCardW
+                },
+                totalMoney: state.totalMoney + foldSixCardBonusBets + foldSixCardW
+            }
         case RESET_ALL_BETS:
             const money = state.totalMoney;
+            const { anteBets, pairplusBets, sixcardbonusBets } = state;
             return {
                 ...initialState,
                 winnings: {
                     ...initialState.winnings
                 },
-                totalMoney: money
+                totalMoney: money,
+                lastBets: {
+                    ab: [...anteBets],
+                    ppb: [...pairplusBets],
+                    scbb: [...sixcardbonusBets]
+                },
+                reset: true
+            }
+        case DO_REBET:
+            const { lastBets } = state;
+            const { ab, ppb, scbb } = lastBets;
+            const totalBetValue = getSums([ ab, ppb, scbb ]);
+            return {
+                ...state,
+                reset: false,
+                anteBets: [...ab],
+                pairplusBets: [...ppb],
+                sixcardbonusBets: [...scbb],
+                totalMoney: state.totalMoney - totalBetValue
+
             }
         default:
             return state;

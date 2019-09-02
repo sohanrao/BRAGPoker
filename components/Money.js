@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, View, Text, AsyncStorage } from 'react-native';
 import { useSelector } from 'react-redux';
+import PropTypes from "prop-types";
 
-const money = props => {
-
+const Money = props => {
     const playing = useSelector(state => state.cards.playing);
 
     useEffect(() => {
@@ -27,13 +27,25 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "white",
         borderRadius: 4,
-        padding: 15
+        alignSelf: "center",
+        minWidth: 100,
+        marginVertical: 10,
+        paddingVertical: 5
     },
     text: {
         fontFamily: 'bree-serif',
         fontSize: 20,
-        color: "white"
+        color: "white",
+        alignSelf: "center"
     }
 });
 
-export default money;
+Money.propTypes = {
+    amt: PropTypes.number.isRequired
+}
+
+Money.defaultProps = {
+    amt: 0
+}
+
+export default Money;

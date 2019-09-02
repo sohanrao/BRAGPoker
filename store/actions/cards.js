@@ -17,9 +17,10 @@ export const setDealStart = () => {
     }
 }
 
-export const setPlayStart = () => {
+export const setPlayStart = (play = false) => {
     return {
-        type: SET_PLAY_START
+        type: SET_PLAY_START,
+        play
     }
 }
 

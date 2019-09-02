@@ -1,17 +1,18 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
+import PropTypes from "prop-types";
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 class Card extends Component {
     render () {
-        const { suit, num } = this.props;
+        const { suit, num, closed, reveal } = this.props;
         let card = (
             <View style={styles.card}>
                 <View style={styles.closedCard}><MaterialCommunityIcons name="cards" size={48} /></View>
             </View>
         );
 
-        if (!this.props.closed || this.props.reveal) {
+        if (!closed || reveal) {
             card = (
                 <View style={styles.card}>
                     <Text style={{
@@ -59,5 +60,17 @@ const styles = StyleSheet.create({
         margin: -3
     }
 });
+
+Card.proptypes = {
+    suit: PropTypes.string.isRequired,
+    num: PropTypes.string.isRequired,
+    closed: PropTypes.bool,
+    reveal: PropTypes.bool
+}
+
+Card.defaultProps = {
+    suit: 'heart',
+    num: 'A'
+}
 
 export default Card;

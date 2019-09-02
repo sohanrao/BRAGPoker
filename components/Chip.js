@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import PropTypes from "prop-types";
 
 const CHIP_VALUES = {
     blue: 1,
@@ -14,8 +15,8 @@ const getChipColor = value => {
     return color || 'red';
 }
 
-const chip = props => {
-    const { value, style } = props;
+const Chip = props => {
+    const { value, pressed, position } = props;
     const color = getChipColor(value);
     const classes = {
         chip: color + 'Chip',
@@ -26,7 +27,7 @@ const chip = props => {
     const smallText = value && value.toString().split('').length > 2;
 
     return (
-        <TouchableOpacity onPress={props.pressed} style={[style, styles.chip, styles[classes.chip]]}>
+        <TouchableOpacity onPress={pressed} style={[position, styles.chip, styles[classes.chip]]}>
             <View style={[styles.chipInner, styles[classes.inner]]}>
                 <Text 
                     style={
@@ -113,4 +114,14 @@ const styles = StyleSheet.create({
     }
 });
 
-export default chip;
+Chip.proptypes = {
+    value: PropTypes.number,
+    pressed: PropTypes.func,
+    position: PropTypes.shape({
+        position: PropTypes.string,
+        top: PropTypes.number,
+        left: PropTypes.number
+    })
+}
+
+export default Chip;
