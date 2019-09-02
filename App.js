@@ -12,7 +12,7 @@ import resultReducer from './store/reducers/result';
 import Navigator from './navigation/Navigator';
 
 import * as firebase from 'firebase';
-import { config } from './firebase';
+import { config } from './firebase-config';
 
 //firebase.initializeApp(config);
 //firebase.auth().signInAnonymously();
