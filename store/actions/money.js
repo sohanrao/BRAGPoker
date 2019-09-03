@@ -3,6 +3,7 @@ export const SELECT_SLOT = "SELECT_SLOT";
 export const PLACE_BET = "PLACE_BET";
 export const REMOVE_LAST_BET = "REMOVE_LAST_BET";
 export const PLACE_PLAY_BET = "PLACE_PLAY_BET";
+export const SET_RESET_STATE = "SET_RESET_STATE";
 export const RESET_ALL_BETS = "RESET_ALL_BETS";
 export const SET_RESULTS = "SET_RESULTS";
 export const FOLD_PLAYER = "FOLD_PLAYER";
@@ -39,6 +40,12 @@ export const removeLastBet = slot => {
 export const placePlayBet = () => {
     return {
         type: PLACE_PLAY_BET
+    }
+}
+
+export const setResetState = () => {
+    return {
+        type: SET_RESET_STATE
     }
 }
 

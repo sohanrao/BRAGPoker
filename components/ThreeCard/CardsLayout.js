@@ -13,7 +13,8 @@ const CardsLayout = props => {
                     num={card.key} 
                     suit={card.suit} 
                     reveal={props.reveal}
-                    closed={props.dealer && index !== 1}/>
+                    closed={props.dealer && index !== 1}
+                    size={props.size}/>
             )}
         </View>
     )
@@ -31,7 +32,8 @@ const styles = StyleSheet.create({
 CardsLayout.proptypes = {
     cards: PropTypes.array,
     reveal: PropTypes.bool,
-    dealer: PropTypes.bool
+    dealer: PropTypes.bool,
+    size: PropTypes.string
 }
 
 export default CardsLayout;

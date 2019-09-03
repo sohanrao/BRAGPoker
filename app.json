@@ -1,17 +1,15 @@
 {
   "expo": {
-    "name": "RN First App",
-    "slug": "rn-first-app",
+    "name": "BRAG Poker",
+    "slug": "brag-poker",
     "privacy": "public",
     "sdkVersion": "34.0.0",
     "platforms": [
-      "ios",
-      "android",
-      "web"
+      "android"
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/brag.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -24,7 +22,13 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.sohanraogames.bragpoker",
+      "buildNumber": "1.0.0",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.sohanrao_games.bragpoker",
+      "versionCode": 1
     }
   }
 }

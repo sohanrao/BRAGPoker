@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -9,6 +9,7 @@ import { setResults, foldPlayer } from '../../store/actions/money';
 import { setCards } from '../../store/actions/cards';
 
 const Dealer = () => {
+    const [size, setSize] = useState('lg');
     const dealing = useSelector(state => state.cards.dealing);
     const playing = useSelector(state => state.cards.playing);
     const folded = useSelector(state => state.cards.folded);
@@ -46,21 +47,28 @@ const Dealer = () => {
         }
     }, [playing, folded]);
 
+    const computeHeight = event => {
+        const { height } = event.nativeEvent.layout;
+        const availableHeight = height > 220 ? 'lg' : (height > 175 && height < 220) ? 'md' : 'sm';
+        setSize(availableHeight);
+    }
+
     if (!showCards) {
-        return <View></View>
+        return <View style={styles.main} onLayout={computeHeight}></View>
     }
 
     return (
         <View style={styles.main}>
-            <CardsLayout cards={cards.dealerCards} reveal={playing || folded} dealer />
-            <CardsLayout cards={cards.playerCards} />
+            <CardsLayout size={size} cards={cards.dealerCards} reveal={playing || folded} dealer />
+            <CardsLayout size={size} cards={cards.playerCards} />
         </View>
     )
 }
 
 const styles = StyleSheet.create({
     main: {
-        padding: 10
+        padding: 10,
+        flex: 1,
     }
 });
 

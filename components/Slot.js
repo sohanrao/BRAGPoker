@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, View, Text, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, TouchableWithoutFeedback, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from "prop-types";
 
@@ -34,28 +34,56 @@ const Slot = props => {
         dispatch(removeLastBet(name));
     }
 
-    const showResult = () => {
+    useEffect(() => {
         const { disqualify, pairplus, sixcardbonus } = winnings;
-        if (name === 'ante') {
-            return winner;
-        } else if (name === 'play') {
-            return winner && !disqualify;
-        } else if (name === 'pairplus') {
-            return pairplus > 0;
-        } else if (name === 'sixcardbonus') {
-            return sixcardbonus > 0;
+        let show = false;
+        switch (name) {
+            case 'ante':
+                show = winner;
+                break;
+            case 'play':
+                show = winner && !disqualify;
+                break;
+            case 'pairplus':
+                show = pairplus > 0;
+                break;
+            case 'sixcardbonus':
+                show = sixcardbonus > 0;
+                break;
         }
-    }
+        if (show) {
+            Animated.timing(chipWonAnim, {
+                toValue: 1,
+                duration: 500
+            }).start();
+        } else {
+            setChipWonAnim(new Animated.Value(0));
+        }
+    }, [winnings]);
+
+    //Anim states
+    const [chipWonAnim, setChipWonAnim] = useState(new Animated.Value(0));
 
     return (
         <TouchableWithoutFeedback onPress={slotSelected}>
             <View style={[styles.container, active ? styles.activeColor : null]}>
                 {bets.length > 0 ?
                     <View>
-                        { showResult() ? 
-                            <Chip position={{position: 'absolute', top: -25, left: -45}} 
-                                value={winnings[name]} /> : null
-                        }
+                        <Animated.View style={{
+                            opacity: chipWonAnim,
+                            transform: [
+                                {
+                                    translateY: chipWonAnim.interpolate({
+                                        inputRange: [0, 1],
+                                        outputRange: [-500, 0]
+                                    })
+                                }
+                            ]
+                        }}>
+                            <Chip 
+                                position={{position: 'absolute', top: -25, left: -45}} 
+                                value={winnings[name]} />
+                        </Animated.View>
                         <Chip value={bets[last]} pressed={removeBetHandler} />
                     </View> :
                     <Text style={[styles.label, active ? styles.activeLabel : null]}>{label}</Text>
@@ -69,9 +97,9 @@ const styles = StyleSheet.create({
     container: {
         borderColor: "white",
         borderWidth: 2,
-        borderRadius: 40,
-        width: 80,
-        height: 80,
+        borderRadius: 35,
+        width: 70,
+        height: 70,
         justifyContent: "center",
         alignItems: "center",
         marginTop: 5,

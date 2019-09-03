@@ -10,8 +10,8 @@ const payouts = {
     },
     sixcardbonus: {
         TRIPS: 7,
-        STRAIGHT: 10,
-        FLUSH: 20,
+        STRAIGHT: 20,
+        FLUSH: 25,
         FULLHOUSE: 40,
         QUADS: 100,
         STRAIGHTFLUSH: 400,
@@ -37,7 +37,6 @@ export const calculateBonuses = (pairplus, sixcard, state) => {
     }
     const pairplusW = pairplus ? getAmount('pairplus', pairplus) : 0;
     const sixcardW = getAmount('sixcardbonus', sixcard);
-
     return {
         pairplusW,
         sixcardW

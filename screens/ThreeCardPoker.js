@@ -1,31 +1,30 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, Animated } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import Dealer from '../components/ThreeCard/Dealer';
 import Bets from '../components/ThreeCard/Bets';
 import Payouts from '../components/ThreeCard/Payouts';
+import Footer from '../components/ThreeCard/Footer';
+import ResetOverlay from '../components/ThreeCard/ResetOverlay';
+import ResultMarquee from '../components/ThreeCard/ResultMarquee';
 
-import GameButton from '../components/GameButton';
 import Money from '../components/Money';
 import HeaderButton from '../components/HeaderButton';
 
-import { setBetsActive, setDealStart, setPlayStart, resetDeal } from '../store/actions/cards';
-import { resetBets, doRebet } from '../store/actions/money';
+import { setBetsActive } from '../store/actions/cards';
 
 import { Utils } from '../components/constants';
 
 const threeCardPoker = props => {
     const [showPayouts, setShowPayouts] = useState(false);
+
     const anteBets = useSelector(state => state.money.anteBets);
     const totalMoney = useSelector(state => state.money.totalMoney);
-    const reset = useSelector(state => state.money.reset);
 
-    const dealing = useSelector(state => state.cards.dealing);
     const playing = useSelector(state => state.cards.playing);
     const folded = useSelector(state => state.cards.folded);
-    const betsActive = useSelector(state => state.cards.betsActive);
 
     const dispatch = useDispatch();
 
@@ -53,47 +52,19 @@ const threeCardPoker = props => {
         dispatch(setBetsActive(anteBets.length > 0));
     }, [anteBets]);
 
-    const dealHandler = () => {
-        dispatch(setDealStart());
-    }
-
-    const playHandler = (play) => {
-        if (!dealing) {
-            return;
-        }
-        dispatch(setPlayStart(play));
-    }
-
     const dealCompleteHandler = () => {
         setDealing(false);
-    }
-
-    const doReset = () => {
-        dispatch(resetDeal());
-        dispatch(resetBets());
-    }
-
-    const rebetHandler = () => {
-        dispatch(doRebet());
     }
 
     return (
         <View style={styles.container}>
             <Payouts visible={showPayouts} onClose={closeModalHandler} />
             <Dealer dealComplete={dealCompleteHandler} />
-            <View style={styles.main}>
-                <Bets />
-            </View>
-            <View style={styles.footer}>
-                <GameButton onPressed={dealHandler} disabled={!betsActive}>Deal</GameButton>
-                <GameButton onPressed={() => playHandler(true)} disabled={!betsActive}>Play</GameButton>
-                <GameButton onPressed={() => playHandler(false)} disabled={!betsActive}>Fold</GameButton>
-                <GameButton onPressed={rebetHandler} disabled={(!betsActive && reset) ? false : true}>Rebet</GameButton>
-            </View>
+            <Bets />
+            <Footer />
+            <ResultMarquee />
             {(playing || folded) ? (
-                <TouchableWithoutFeedback onPress={doReset}>
-                    <View style={styles.overlay}></View>
-                </TouchableWithoutFeedback>
+                <ResetOverlay />
             ) : null}
         </View>
     )
@@ -117,28 +88,6 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: Utils.threeCardScreenBackgroundColor,
         flex: 1,
-    },
-    main: {
-        flex: 1,
-        marginTop: 10,
-    },
-    footer: {
-        backgroundColor: Utils.footerBackgroundColor,
-        height: "18%",
-        borderColor: Utils.footerBorderColor,
-        borderTopWidth: 25,
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        alignItems: "center"
-    },
-    overlay: {
-        flex: 1,
-        position: "absolute",
-        left: 0,
-        top: 0,
-        opacity: 0,
-        height: Dimensions.get('window').height,
-        width: Dimensions.get('window').width
     }
 });
 

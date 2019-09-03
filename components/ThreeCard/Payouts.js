@@ -19,8 +19,8 @@ const PAYOUT_DATA = [
         { name: 'Flush', value: '1 x 25' },
         { name: 'Full House', value: '1 x 40' },
         { name: 'Four of a kind', value: '1 x 100' },
-        { name: 'Straight Flush', value: '1 x 200' },
-        { name: 'Royal Flush', value: '1 x 400' }
+        { name: 'Straight Flush', value: '1 x 400' },
+        { name: 'Royal Flush', value: '1 x 1000' }
     ]}
 ];
 

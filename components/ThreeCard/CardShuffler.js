@@ -17,7 +17,7 @@ const cards = [
 
 const getDeck = () => {
     //uncomment below for test deal
-    //const testCards = ['8-spade','10-heart','11-spade','5-spade','6-spade', '11-spade'];
+    //const testCards = ['8-spade','8-diamond','11-spade','7-spade','10-heart', '11-spade'];
     //return addCardsToDeck(testCards);
 
     //prepare deck

@@ -76,7 +76,8 @@ const Bets = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        marginTop: 10
     },
     playerStack: {
         height: 70,

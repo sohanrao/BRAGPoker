@@ -1,8 +1,10 @@
-import { PLACE_BET, SELECT_SLOT, REMOVE_LAST_BET, PLACE_PLAY_BET, RESET_ALL_BETS, SET_RESULTS, SET_AVAILABLE_AMOUNT, DO_REBET, FOLD_PLAYER } from "../actions/money";
+import { PLACE_BET, SELECT_SLOT, REMOVE_LAST_BET, PLACE_PLAY_BET, SET_RESET_STATE, RESET_ALL_BETS, SET_RESULTS, SET_AVAILABLE_AMOUNT, DO_REBET, FOLD_PLAYER } from "../actions/money";
 import { calculateBonuses, getSum, getSums } from './utility';
 
 const initialState = {
     totalMoney: 0,
+    totalWin: 0,
+    totalLoss: 0,
     anteBets: [],
     playBets: [],
     pairplusBets: [],
@@ -71,12 +73,16 @@ const moneyReducer = (state = initialState, action) => {
             const { pairplusW, sixcardW } = calculateBonuses(pairplus, sixcard, state);
             const anteW = isPlayer ? getSum([...state.anteBets]) : 0;
             const playW = !disqualify ? anteW : 0;
-            const totalBets = isPlayer ? (getSum(state.anteBets) * 2) : 0;
-            const totalBonusBets = getSums([ 
+            const totalBetsRetained = isPlayer ? (getSum(state.anteBets) * 2) : 0;
+            const totalBonusBetsRetained = getSums([ 
                 pairplusW ? state.pairplusBets : [],
                 sixcardW ? state.sixcardbonusBets : []
              ]);
-            const totalW = pairplusW + sixcardW + anteW + playW;
+            const totalBets = getSums([
+                state.anteBets, state.anteBets, state.pairplusBets, state.sixcardbonusBets
+            ]);
+            const totalNetBets = totalBets - totalBetsRetained - totalBonusBetsRetained;
+            const totalW = anteW + playW + pairplusW + sixcardW;
             return {
                 ...state,
                 winner: isPlayer,
@@ -87,18 +93,29 @@ const moneyReducer = (state = initialState, action) => {
                     pairplus: pairplusW,
                     sixcardbonus: sixcardW
                 },
-                totalMoney: state.totalMoney + totalBets + totalBonusBets + totalW
+                totalWin: totalW - totalNetBets,
+                totalMoney: state.totalMoney + totalBetsRetained + totalBonusBetsRetained + totalW
             }
         case FOLD_PLAYER:
             const foldSixCardW = calculateBonuses('', action.sixcard, state).sixcardW;
-            const foldSixCardBonusBets = foldSixCardW ? getSum(state.sixcardbonusBets) : 0;
+            const foldSixCardBonusBetsRetained = foldSixCardW ? getSum(state.sixcardbonusBets) : 0;
+            const foldTotalBets = getSums([
+                state.anteBets, state.pairplusBets, state.sixcardbonusBets
+            ]);
+            const foldTotalNetBets = foldTotalBets - foldSixCardBonusBetsRetained;
             return {
                 ...state,
                 winnings: {
                     ...state.winnings,
                     sixcardbonus: foldSixCardW
                 },
-                totalMoney: state.totalMoney + foldSixCardBonusBets + foldSixCardW
+                totalWin: foldSixCardW - foldTotalNetBets,
+                totalMoney: state.totalMoney + foldSixCardBonusBetsRetained + foldSixCardW
+            }
+        case SET_RESET_STATE:
+            return {
+                ...state,
+                reset: true
             }
         case RESET_ALL_BETS:
             const money = state.totalMoney;
@@ -126,7 +143,10 @@ const moneyReducer = (state = initialState, action) => {
                 anteBets: [...ab],
                 pairplusBets: [...ppb],
                 sixcardbonusBets: [...scbb],
-                totalMoney: state.totalMoney - totalBetValue
+                totalMoney: state.totalMoney - totalBetValue,
+                lastBets: {
+                    ...initialState.lastBets
+                }
 
             }
         default:
